@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Foodie generator</title>
+</head>
+<body>
+    <form onsubmit="return validate(this);" method="dialog">
+        Place:<br>
+        <input type="text" name="place" id=""><br>
+        MRT station:<br>
+        <input type="text" name="mrt" id=""><br>
+        Address:<br>
+        <input type="text" name="address" id=""><br>
+        Date:<br>
+        <input type="text" name="date" id=""><br>
+        Class:<br>
+        <input type="text" name="class" id=""><br>
+        Price:<br>
+        <input type="text" name="price" id=""><br>
+        Delicious:<br>
+        <input type="number" name="score" step="0.5" id=""><br>
+        Comment:<br>
+        <input type="text" name="comment" id=""><br>
+        Return:<br>
+        <input type="radio" name="return_score" value="🈵" checked> 🈵 
+        <input type="radio" name="return_score" value="🈴️"> 🈴️ 
+        <input type="radio" name="return_score" value="🈚"> 🈚 
+        <input type="radio" name="return_score" value="🈳"> 🈳
+        <br>
+        <input type="submit" value="Submit">
+    </form>
+    <div>
+        <textarea id="result" rows="20" cols="50"></textarea>
+    </div>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script>
+        function validate(form) {
+            // console.log(getFormData($(form)))
+            var res = formater(getFormData($(form)));
+            // alert(res)
+            $('#result').html(res)
+        }
+        function getFormData($form){
+            var unindexed_array = $form.serializeArray();
+            var indexed_array = {};
+
+            $.map(unindexed_array, function(n, i){
+                indexed_array[n['name']] = n['value'];
+            });
+
+            return indexed_array;
+        }
+        function formater(content) {
+            var str = '';
+            str += `place: ${content.place}\n`;
+            str += content.mrt.trim() ? `🚏: ${content.mrt}\n` : '';
+            str += `📍: ${content.address}\n`;
+            str += `date: ${content.date}\n`;
+            str += `.\n`;
+            str += `class ${content.class} {\n`;
+            str += `price: $${content.price}\n`;
+            str += `delicious: ${numberToHeart(content.score)}\n`;
+            str += `comment: ${content.comment}\n`;
+            str += `}\n`;
+            str += `.\nreturn ${content.return_score}\n.\n`
+            str += `#wcodingfoodie #girls #women #coding #taiwan #台灣美食`
+            return str;
+        }
+        function numberToHeart (num) {
+            var full = Math.floor(num);
+            var half = Math.round(num) == Math.floor(num) ? 0: 1;
+            var empty = 5-Math.round(num);
+            var res = ['❤️','❤️','❤️','❤️','❤️'];
+            var pos = 0;
+            res.fill('❤️',pos);
+            pos += full;
+            res.fill('💔',pos);
+            pos += half;
+            res.fill('🖤',pos);
+            return res.join('');
+        }
+    </script>
+</body>
+</html>
